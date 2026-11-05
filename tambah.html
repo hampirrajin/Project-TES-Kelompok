@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Kelas - SkillShare Campus</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <h2>SkillShare Campus</h2>
+
+        <div class="nav-menu">
+            <a href="beranda.html">Beranda</a>
+            <a href="kelas.html">Kelas</a>
+            <a href="tambah.html">Buat Kelas</a>
+            <a href="login.html">Login</a>
+        </div>
+    </nav>
+
+    <section class="container">
+        <h2>Buat Kelas Baru</h2>
+        <p>Bagikan kemampuanmu dan ajak mahasiswa lain untuk belajar bersama.</p>
+
+        <br>
+
+        <form id="formTambah" class="form-box">
+
+            <label>Nama Kelas</label>
+            <input
+                type="text"
+                id="namaKelas"
+                placeholder="Contoh: Belajar Desain Canva"
+                required
+            >
+
+            <label>Kategori</label>
+            <select id="kategoriKelas" required>
+                <option value="">Pilih kategori</option>
+                <option value="Teknologi">Teknologi</option>
+                <option value="Desain">Desain</option>
+                <option value="Public Speaking">Public Speaking</option>
+                <option value="Musik">Musik</option>
+            </select>
+
+            <label>Nama Mentor</label>
+            <input
+                type="text"
+                id="namaMentor"
+                placeholder="Masukkan nama mentor"
+                required
+            >
+
+            <label>Tanggal Kelas</label>
+            <input type="date" id="tanggalKelas" required>
+
+            <label>Kuota Peserta</label>
+            <input
+                type="number"
+                id="kuotaKelas"
+                min="1"
+                placeholder="Contoh: 20"
+                required
+            >
+
+            <label>Deskripsi Kelas</label>
+            <textarea
+                id="deskripsiKelas"
+                rows="4"
+                placeholder="Jelaskan materi yang akan dipelajari..."
+                required
+            ></textarea>
+
+            <button type="submit" class="btn-form">
+                Tambahkan Kelas
+            </button>
+
+        </form>
+    </section>
+
+    <footer>
+        <p>© 2026 SkillShare Campus</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
