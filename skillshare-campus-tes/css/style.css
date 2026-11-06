@@ -1,0 +1,34 @@
+/* =====================================================================
+   css/style.css  -  CSS biasa (di luar Tailwind)
+   Pemilik: Anggota 1. Warna web: biru muda / biru / biru dongker / putih.
+   ===================================================================== */
+
+/* Kolom yang salah diisi diberi garis merah tua (hanya untuk pesan error) */
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] { border-color: #B91C1C; }
+.kolom-pil:has([aria-invalid="true"]) { border-color: #B91C1C; }
+
+/* Tombol tab di halaman Detail Kelas (Review / Questions and responses) */
+.tab-btn { color: #1E3A8A; font-weight: 500; }
+.tab-btn[aria-selected="true"] { background: #FFFFFF; color: #0B1B4D; font-weight: 600; box-shadow: 0 1px 2px rgba(11, 27, 77, 0.12); }
+
+/* Tabel Simple-DataTables disesuaikan dengan warna web */
+.datatable-wrapper { color: #0B1B4D; font-family: inherit; }
+.datatable-table > thead > tr > th { color: #1E3A8A; text-align: left; }
+.datatable-table > thead > tr > th,
+.datatable-table > tbody > tr > td { padding: 10px 12px; }
+.datatable-table > tbody > tr:hover > td { background: #EFF6FF; }
+.datatable-sorter:hover, .datatable-sorter:hover::before, .datatable-sorter:hover::after { color: #2563EB; }
+.datatable-input { border: 2px solid #BFDBFE; border-radius: 10px; padding: 6px 12px; font-family: inherit; }
+.datatable-input:focus { outline: 3px solid #BFDBFE; border-color: #2563EB; }
+.datatable-selector { border: 2px solid #BFDBFE; border-radius: 10px; padding: 4px 8px; font-family: inherit; }
+.datatable-pagination button { border-radius: 8px; cursor: pointer; }
+.datatable-pagination button:hover { background: #DBEAFE; }
+.datatable-pagination .datatable-active button,
+.datatable-pagination .datatable-active button:hover,
+.datatable-pagination .datatable-active button:focus { background: #2563EB; color: #FFFFFF; }
+
+/* Popup peta Leaflet memakai font web */
+.leaflet-popup-content { font-family: 'Poppins', system-ui, sans-serif; color: #0B1B4D; }
+.leaflet-popup-content a { color: #2563EB; font-weight: 600; }

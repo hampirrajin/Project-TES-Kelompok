@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | SkillShare Campus</title>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS (lewat CDN, tidak perlu instalasi) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3/dist/index.global.js"></script>
+
+  <!-- CSS biasa milik kita -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Warna, font, dan komponen yang dipakai semua halaman.
+       BAGIAN INI SAMA DI SEMUA FILE HTML. Jangan diubah sendiri, tanya Anggota 1. -->
+  <style type="text/tailwindcss">
+    @theme {
+      --color-navy: #0B1B4D;
+      --color-biru: #2563EB;
+      --color-biru-tua: #1E3A8A;
+      --color-biru-muda: #DBEAFE;
+      --color-biru-tipis: #BFDBFE;
+      --color-langit: #EFF6FF;
+      --color-awan: #F4F8FF;
+      --color-garis: #C7D7F5;
+      --color-redup: #475A85;
+      --font-judul: "Playfair Display", serif;
+      --font-sans: "Poppins", system-ui, sans-serif;
+    }
+
+    @layer components {
+      .tombol-utama   { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full bg-biru text-white font-semibold cursor-pointer transition-colors hover:bg-biru-tua disabled:bg-biru-tipis disabled:text-biru-tua disabled:cursor-not-allowed; }
+      .tombol-tua     { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full bg-biru-tua text-white font-semibold cursor-pointer transition-colors hover:bg-navy; }
+      .tombol-putih   { @apply inline-flex items-center justify-center min-h-12 px-8 rounded-full bg-white text-navy font-semibold cursor-pointer transition-colors hover:bg-langit; }
+      .tombol-garis   { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full border-2 border-biru text-biru font-semibold cursor-pointer transition-colors hover:bg-langit; }
+      .tombol-garis-putih { @apply inline-flex items-center justify-center min-h-12 px-8 rounded-full border-2 border-white text-white font-semibold cursor-pointer transition-colors hover:bg-white/10; }
+      .kolom          { @apply w-full h-13 px-4 rounded-xl border-2 border-biru-tipis bg-white text-navy placeholder:text-slate-400 focus:outline-3 focus:outline-biru-tipis focus:border-biru; }
+      .kolom-pil      { @apply flex items-center gap-3 h-14 px-5 rounded-full border-2 border-biru-tipis bg-white text-biru-tua focus-within:border-biru focus-within:outline-3 focus-within:outline-biru-tipis; }
+      .kolom-pil input { @apply flex-1 min-w-0 bg-transparent text-navy outline-none placeholder:text-slate-400; }
+      .label-form     { @apply block mb-2 text-sm font-semibold text-navy; }
+      .error          { @apply mt-1.5 pl-1 text-sm font-medium text-red-700 empty:hidden; }
+      .kartu          { @apply bg-white border border-garis rounded-3xl; }
+      .chip           { @apply inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-biru-muda text-navy text-sm font-semibold; }
+      .nav-link       { @apply py-2 text-sm font-semibold text-navy border-b-4 border-transparent hover:text-biru; }
+      .nav-link.aktif { @apply text-biru border-biru; }
+    }
+  </style>
+
+  <!-- JavaScript bersama (data, login, fungsi bantu) -->
+  <script src="js/data.js"></script>
+</head>
+
+<body class="bg-white font-sans text-navy antialiased">
+
+  <main>
+    <!-- ===== HALAMAN LOGIN (Anggota 1) ===== -->
+    <section aria-labelledby="judul-login">
+      <div class="min-h-screen bg-awan flex items-center justify-center px-6 py-12">
+        <div class="w-full max-w-sm">
+          <p class="mb-5 font-judul font-bold text-lg tracking-wider text-biru-tua">SKILLSHARE CAMPUS</p>
+          <h1 id="judul-login" class="font-judul font-bold text-4xl text-navy">LOGIN</h1>
+          <p class="mt-3 text-redup">Selamat datang dan silakan masukkan akun Anda!</p>
+          <p class="mt-4 rounded-xl bg-langit border border-garis px-4 py-3 text-sm text-redup">
+            Akun contoh: nama pengguna <strong class="text-navy">mahasiswa</strong>, kata sandi <strong class="text-navy">123456</strong>
+          </p>
+
+          <form id="form-login" class="mt-8 space-y-5" novalidate>
+            <div>
+              <label for="login-username" class="sr-only">Nama pengguna</label>
+              <div class="kolom-pil">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>
+                <input id="login-username" type="text" placeholder="Nama pengguna" autocomplete="username">
+              </div>
+              <p id="err-login-username" class="error"></p>
+            </div>
+
+            <div>
+              <label for="login-sandi" class="sr-only">Kata sandi</label>
+              <div class="kolom-pil">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                <input id="login-sandi" type="password" placeholder="Kata sandi" autocomplete="current-password">
+                <button type="button" data-lihat-sandi="login-sandi" aria-label="Tampilkan kata sandi"
+                        class="size-10 -mr-2 rounded-full flex items-center justify-center cursor-pointer hover:bg-langit">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
+                </button>
+              </div>
+              <p id="err-login-sandi" class="error"></p>
+            </div>
+
+            <label class="flex items-center gap-3 min-h-11 pl-1 text-sm cursor-pointer">
+              <input id="login-ingat" type="checkbox" checked class="size-5 accent-biru">
+              Ingat saya
+            </label>
+
+            <p class="pl-1 text-sm leading-7">
+              Belum punya akun?<br>
+              <a href="daftar.html" class="italic font-medium text-biru-tua underline hover:text-biru">Buat akun di sini</a>
+            </p>
+
+            <button type="submit" class="tombol-utama w-full h-14 text-lg tracking-widest">LOGIN</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pesan kecil (toast) -->
+  <div id="toast" role="status" aria-live="polite"
+       class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] rounded-full bg-navy px-6 py-3 text-sm font-medium text-white shadow-lg opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+  <!-- ===== JavaScript khusus halaman ini ===== -->
+  <script>
+    // Kalau sudah login, langsung ke Beranda
+    if (ambilUser()) {
+      window.location.replace('beranda.html');
+    }
+
+    // Saat tombol LOGIN ditekan
+    el('form-login').addEventListener('submit', function (e) {
+      e.preventDefault();          // cegah halaman refresh
+      bersihkanError(this);        // hapus pesan error lama
+
+      const nama = el('login-username').value.trim();
+      const sandi = el('login-sandi').value;
+      let valid = true;
+
+      if (nama === '')  { setError('login-username', 'Nama pengguna wajib diisi.'); valid = false; }
+      if (sandi === '') { setError('login-sandi', 'Kata sandi wajib diisi.'); valid = false; }
+      if (!valid) return;
+
+      const akun = cekLogin(nama, sandi);
+      if (!akun) {
+        setError('login-sandi', 'Nama pengguna atau kata sandi salah.');
+        return;
+      }
+
+      simpanSesi(akun.nama, el('login-ingat').checked);
+      pesanBerikutnya('Selamat datang, ' + akun.nama + '!');
+      window.location.href = 'beranda.html';   // pindah ke halaman Beranda
+    });
+  </script>
+</body>
+</html>

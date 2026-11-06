@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Pendaftaran | SkillShare Campus</title>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@10.3.0/dist/style.css">
+
+  <!-- Tailwind CSS (lewat CDN, tidak perlu instalasi) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3/dist/index.global.js"></script>
+
+  <!-- CSS biasa milik kita -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Warna, font, dan komponen yang dipakai semua halaman.
+       BAGIAN INI SAMA DI SEMUA FILE HTML. Jangan diubah sendiri, tanya Anggota 1. -->
+  <style type="text/tailwindcss">
+    @theme {
+      --color-navy: #0B1B4D;
+      --color-biru: #2563EB;
+      --color-biru-tua: #1E3A8A;
+      --color-biru-muda: #DBEAFE;
+      --color-biru-tipis: #BFDBFE;
+      --color-langit: #EFF6FF;
+      --color-awan: #F4F8FF;
+      --color-garis: #C7D7F5;
+      --color-redup: #475A85;
+      --font-judul: "Playfair Display", serif;
+      --font-sans: "Poppins", system-ui, sans-serif;
+    }
+
+    @layer components {
+      .tombol-utama   { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full bg-biru text-white font-semibold cursor-pointer transition-colors hover:bg-biru-tua disabled:bg-biru-tipis disabled:text-biru-tua disabled:cursor-not-allowed; }
+      .tombol-tua     { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full bg-biru-tua text-white font-semibold cursor-pointer transition-colors hover:bg-navy; }
+      .tombol-putih   { @apply inline-flex items-center justify-center min-h-12 px-8 rounded-full bg-white text-navy font-semibold cursor-pointer transition-colors hover:bg-langit; }
+      .tombol-garis   { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full border-2 border-biru text-biru font-semibold cursor-pointer transition-colors hover:bg-langit; }
+      .tombol-garis-putih { @apply inline-flex items-center justify-center min-h-12 px-8 rounded-full border-2 border-white text-white font-semibold cursor-pointer transition-colors hover:bg-white/10; }
+      .kolom          { @apply w-full h-13 px-4 rounded-xl border-2 border-biru-tipis bg-white text-navy placeholder:text-slate-400 focus:outline-3 focus:outline-biru-tipis focus:border-biru; }
+      .kolom-pil      { @apply flex items-center gap-3 h-14 px-5 rounded-full border-2 border-biru-tipis bg-white text-biru-tua focus-within:border-biru focus-within:outline-3 focus-within:outline-biru-tipis; }
+      .kolom-pil input { @apply flex-1 min-w-0 bg-transparent text-navy outline-none placeholder:text-slate-400; }
+      .label-form     { @apply block mb-2 text-sm font-semibold text-navy; }
+      .error          { @apply mt-1.5 pl-1 text-sm font-medium text-red-700 empty:hidden; }
+      .kartu          { @apply bg-white border border-garis rounded-3xl; }
+      .chip           { @apply inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-biru-muda text-navy text-sm font-semibold; }
+      .nav-link       { @apply py-2 text-sm font-semibold text-navy border-b-4 border-transparent hover:text-biru; }
+      .nav-link.aktif { @apply text-biru border-biru; }
+    }
+  </style>
+
+  <!-- JavaScript bersama (data, login, fungsi bantu) -->
+  <script src="js/data.js"></script>
+  <!-- Kalau belum login, otomatis dikirim ke halaman Login -->
+  <script>wajibLogin();</script>
+</head>
+
+<body class="bg-white font-sans text-navy antialiased">
+
+  <!-- ===== NAVBAR (sama di semua halaman setelah login) ===== -->
+  <header class="sticky top-0 z-40 bg-white border-b border-garis">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-x-8 gap-y-2">
+      <div class="flex items-center gap-3">
+        <button id="btn-menu" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="menu-utama"
+                class="xl:hidden size-11 rounded-xl bg-langit text-biru-tua flex items-center justify-center cursor-pointer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a href="beranda.html" class="font-judul font-bold text-xl sm:text-2xl tracking-wider text-navy">SKILLSHARE CAMPUS</a>
+      </div>
+      <nav id="menu-utama" aria-label="Menu utama" class="hidden xl:flex basis-full xl:basis-auto flex-col xl:flex-row xl:items-center gap-x-7 gap-y-1">
+        <a class="nav-link" href="beranda.html">Beranda</a>
+        <a class="nav-link" href="kelas.html">Daftar Kelas</a>
+        <a class="nav-link" href="tambah.html">Tambah Kelas</a>
+        <a class="nav-link aktif" aria-current="page" href="tabel.html">Data Pendaftaran</a>
+        <a class="nav-link" href="statistik.html">Statistik</a>
+        <a class="nav-link" href="peta.html">Peta</a>
+        <span class="flex items-center gap-3 xl:ml-2 py-2 xl:py-0">
+          <span class="text-sm text-redup">Halo, <strong id="nama-user" class="text-navy"></strong></span>
+          <button id="btn-logout" type="button" class="tombol-garis min-h-10 px-5 text-sm">Keluar</button>
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== HALAMAN DATA PENDAFTARAN (Anggota 5) ===== -->
+    <section aria-labelledby="judul-tabel">
+      <div class="max-w-7xl mx-auto px-6 py-10 sm:py-14">
+        <h1 id="judul-tabel" class="text-center font-judul font-semibold text-3xl sm:text-4xl tracking-widest text-navy">DATA PENDAFTARAN</h1>
+        <p class="mt-3 text-center text-redup">Semua pendaftaran kelas. Ketik di kotak cari, atau klik judul kolom untuk mengurutkan.</p>
+
+        <p id="tabel-pesan" class="hidden mt-6 rounded-2xl bg-langit border border-garis p-6 text-center text-redup"></p>
+
+        <div class="kartu mt-8 p-4 sm:p-6 overflow-x-auto">
+          <table id="tabel-pendaftaran" class="w-full text-sm">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Peserta</th>
+                <th>Kelas</th>
+                <th>Kategori</th>
+                <th>Jadwal</th>
+                <th>Tanggal Daftar</th>
+              </tr>
+            </thead>
+            <!-- Isi baris tabel diisi oleh JavaScript di bawah -->
+            <tbody id="tbody-pendaftaran"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-garis bg-langit">
+    <div class="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-redup">
+      &copy; 2026 SkillShare Campus &middot; Proyek UTS Pemrograman Web
+    </div>
+  </footer>
+
+  <!-- Pesan kecil (toast) -->
+  <div id="toast" role="status" aria-live="polite"
+       class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] rounded-full bg-navy px-6 py-3 text-sm font-medium text-white shadow-lg opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@10.3.0/dist/umd/simple-datatables.js"></script>
+
+  <!-- ===== JavaScript khusus halaman ini ===== -->
+  <script>
+    if (typeof simpleDatatables === 'undefined') {
+      // Pustaka tabel gagal dimuat (biasanya karena internet mati)
+      el('tabel-pesan').textContent = 'Tabel belum bisa dimuat. Cek koneksi internet, lalu muat ulang halaman.';
+      el('tabel-pesan').classList.remove('hidden');
+    } else {
+      // 1) Isi baris tabel dari data pendaftaran
+      const semua = ambilSemuaPendaftaran();
+      let baris = '';
+      for (let i = 0; i < semua.length; i++) {
+        const p = semua[i];
+        const kelas = ambilKelasById(p.idKelas);
+        baris += '' +
+          '<tr>' +
+            '<td>' + (i + 1) + '</td>' +
+            '<td>' + esc(p.username) + '</td>' +
+            '<td>' + esc(kelas ? kelas.nama : '-') + '</td>' +
+            '<td>' + esc(kelas ? kelas.kategori : '-') + '</td>' +
+            '<td>' + esc(kelas ? kelas.jadwal : '-') + '</td>' +
+            '<td>' + formatTanggal(p.tanggal) + '</td>' +
+          '</tr>';
+      }
+      el('tbody-pendaftaran').innerHTML = baris;
+
+      // 2) Ubah tabel biasa menjadi tabel interaktif (cari, urutkan, halaman)
+      new simpleDatatables.DataTable('#tabel-pendaftaran', {
+        searchable: true,
+        sortable: true,
+        perPage: 5,
+        perPageSelect: [5, 10, 20],
+        labels: {
+          placeholder: 'Cari data...',
+          searchTitle: 'Cari di dalam tabel',
+          searchLabel: 'Cari',
+          perPage: 'data per halaman',
+          pageTitle: 'Halaman {page}',
+          noRows: 'Belum ada data pendaftaran',
+          noResults: 'Tidak ada hasil yang cocok',
+          info: 'Menampilkan {start} sampai {end} dari {rows} data',
+          sortHint: 'Klik untuk mengurutkan'
+        }
+      });
+    }
+  </script>
+</body>
+</html>

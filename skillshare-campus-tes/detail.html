@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Kelas | SkillShare Campus</title>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS (lewat CDN, tidak perlu instalasi) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3/dist/index.global.js"></script>
+
+  <!-- CSS biasa milik kita -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Warna, font, dan komponen yang dipakai semua halaman.
+       BAGIAN INI SAMA DI SEMUA FILE HTML. Jangan diubah sendiri, tanya Anggota 1. -->
+  <style type="text/tailwindcss">
+    @theme {
+      --color-navy: #0B1B4D;
+      --color-biru: #2563EB;
+      --color-biru-tua: #1E3A8A;
+      --color-biru-muda: #DBEAFE;
+      --color-biru-tipis: #BFDBFE;
+      --color-langit: #EFF6FF;
+      --color-awan: #F4F8FF;
+      --color-garis: #C7D7F5;
+      --color-redup: #475A85;
+      --font-judul: "Playfair Display", serif;
+      --font-sans: "Poppins", system-ui, sans-serif;
+    }
+
+    @layer components {
+      .tombol-utama   { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full bg-biru text-white font-semibold cursor-pointer transition-colors hover:bg-biru-tua disabled:bg-biru-tipis disabled:text-biru-tua disabled:cursor-not-allowed; }
+      .tombol-tua     { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full bg-biru-tua text-white font-semibold cursor-pointer transition-colors hover:bg-navy; }
+      .tombol-putih   { @apply inline-flex items-center justify-center min-h-12 px-8 rounded-full bg-white text-navy font-semibold cursor-pointer transition-colors hover:bg-langit; }
+      .tombol-garis   { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full border-2 border-biru text-biru font-semibold cursor-pointer transition-colors hover:bg-langit; }
+      .tombol-garis-putih { @apply inline-flex items-center justify-center min-h-12 px-8 rounded-full border-2 border-white text-white font-semibold cursor-pointer transition-colors hover:bg-white/10; }
+      .kolom          { @apply w-full h-13 px-4 rounded-xl border-2 border-biru-tipis bg-white text-navy placeholder:text-slate-400 focus:outline-3 focus:outline-biru-tipis focus:border-biru; }
+      .kolom-pil      { @apply flex items-center gap-3 h-14 px-5 rounded-full border-2 border-biru-tipis bg-white text-biru-tua focus-within:border-biru focus-within:outline-3 focus-within:outline-biru-tipis; }
+      .kolom-pil input { @apply flex-1 min-w-0 bg-transparent text-navy outline-none placeholder:text-slate-400; }
+      .label-form     { @apply block mb-2 text-sm font-semibold text-navy; }
+      .error          { @apply mt-1.5 pl-1 text-sm font-medium text-red-700 empty:hidden; }
+      .kartu          { @apply bg-white border border-garis rounded-3xl; }
+      .chip           { @apply inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-biru-muda text-navy text-sm font-semibold; }
+      .nav-link       { @apply py-2 text-sm font-semibold text-navy border-b-4 border-transparent hover:text-biru; }
+      .nav-link.aktif { @apply text-biru border-biru; }
+    }
+  </style>
+
+  <!-- JavaScript bersama (data, login, fungsi bantu) -->
+  <script src="js/data.js"></script>
+  <!-- Kalau belum login, otomatis dikirim ke halaman Login -->
+  <script>wajibLogin();</script>
+</head>
+
+<body class="bg-white font-sans text-navy antialiased">
+
+  <!-- ===== NAVBAR (sama di semua halaman setelah login) ===== -->
+  <header class="sticky top-0 z-40 bg-white border-b border-garis">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-x-8 gap-y-2">
+      <div class="flex items-center gap-3">
+        <button id="btn-menu" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="menu-utama"
+                class="xl:hidden size-11 rounded-xl bg-langit text-biru-tua flex items-center justify-center cursor-pointer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a href="beranda.html" class="font-judul font-bold text-xl sm:text-2xl tracking-wider text-navy">SKILLSHARE CAMPUS</a>
+      </div>
+      <nav id="menu-utama" aria-label="Menu utama" class="hidden xl:flex basis-full xl:basis-auto flex-col xl:flex-row xl:items-center gap-x-7 gap-y-1">
+        <a class="nav-link" href="beranda.html">Beranda</a>
+        <a class="nav-link aktif" aria-current="page" href="kelas.html">Daftar Kelas</a>
+        <a class="nav-link" href="tambah.html">Tambah Kelas</a>
+        <a class="nav-link" href="tabel.html">Data Pendaftaran</a>
+        <a class="nav-link" href="statistik.html">Statistik</a>
+        <a class="nav-link" href="peta.html">Peta</a>
+        <span class="flex items-center gap-3 xl:ml-2 py-2 xl:py-0">
+          <span class="text-sm text-redup">Halo, <strong id="nama-user" class="text-navy"></strong></span>
+          <button id="btn-logout" type="button" class="tombol-garis min-h-10 px-5 text-sm">Keluar</button>
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== HALAMAN DETAIL KELAS (Anggota 4) ===== -->
+    <section aria-labelledby="detail-nama">
+      <div class="max-w-7xl mx-auto px-6 py-10 sm:py-14">
+        <a href="kelas.html" class="inline-flex items-center gap-2 text-sm font-semibold text-biru-tua hover:text-biru">&larr; Kembali ke Daftar Kelas</a>
+
+        <div class="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+          <article class="kartu p-6 sm:p-10">
+            <span id="detail-kategori" class="chip"></span>
+            <h1 id="detail-nama" class="mt-4 font-judul font-semibold text-3xl sm:text-4xl text-navy"></h1>
+            <dl class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-3 text-sm">
+              <div><dt class="text-redup">Pengajar</dt><dd id="detail-pengajar" class="mt-1 font-semibold"></dd></div>
+              <div><dt class="text-redup">Jadwal</dt><dd id="detail-jadwal" class="mt-1 font-semibold"></dd></div>
+              <div><dt class="text-redup">Lokasi</dt><dd id="detail-lokasi" class="mt-1 font-semibold"></dd></div>
+            </dl>
+            <h2 class="mt-8 font-judul font-semibold text-xl">Tentang kelas ini</h2>
+            <p id="detail-deskripsi" class="mt-2 leading-7 text-redup"></p>
+          </article>
+
+          <aside class="kartu bg-langit p-6 sm:p-8 h-fit" aria-label="Pendaftaran kelas">
+            <div class="flex items-center gap-4">
+              <span id="detail-ikon" class="size-16 shrink-0 rounded-2xl bg-biru-muda text-biru-tua flex items-center justify-center"></span>
+              <div>
+                <p class="text-sm text-redup">Kursi tersisa</p>
+                <p class="font-judul font-bold text-4xl"><span id="detail-sisa">0</span><span class="text-lg font-medium text-redup"> / <span id="detail-kuota">0</span></span></p>
+              </div>
+            </div>
+            <div class="mt-5 h-3 rounded-full bg-biru-muda overflow-hidden">
+              <div id="detail-bar" class="h-full rounded-full bg-biru" style="width:0%"></div>
+            </div>
+            <p id="detail-info" class="mt-2 text-sm text-redup"></p>
+            <button id="btn-daftar-kelas" type="button" class="tombol-utama w-full mt-6">Daftar Kelas</button>
+            <h2 class="mt-8 text-sm font-semibold">Peserta terdaftar</h2>
+            <ul id="detail-peserta" class="mt-2 space-y-1 text-sm text-redup"></ul>
+          </aside>
+        </div>
+
+        <!-- ===== Review dan Tanya Jawab ===== -->
+        <section class="kartu mt-10 p-6 sm:p-8" aria-label="Review dan pertanyaan">
+          <div role="tablist" class="flex gap-1.5 rounded-2xl bg-langit p-1.5">
+            <button id="tab-review" type="button" role="tab" aria-selected="true"
+                    class="tab-btn min-h-11 flex-1 rounded-xl px-4 text-sm cursor-pointer sm:flex-none sm:px-6">Review (<span id="jumlah-review">0</span>)</button>
+            <button id="tab-tanya" type="button" role="tab" aria-selected="false"
+                    class="tab-btn min-h-11 flex-1 rounded-xl px-4 text-sm cursor-pointer sm:flex-none sm:px-6">Questions and responses (<span id="jumlah-tanya">0</span>)</button>
+          </div>
+
+          <!-- Tab 1: Review -->
+          <div id="panel-review">
+            <p class="mt-7 text-sm font-medium text-redup">Course Rating</p>
+            <div class="mt-2 flex items-center gap-4">
+              <span id="rata-rating" class="font-judul font-bold text-5xl leading-none">-</span>
+              <span id="bintang-rata"></span>
+            </div>
+            <div class="mt-7 flex items-center gap-3 border-b-2 border-biru-muda pb-3">
+              <h3 class="font-judul font-semibold text-xl">Reviews</h3>
+              <span id="badge-review" class="inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-biru-muda px-2 text-sm font-semibold text-biru-tua">0</span>
+            </div>
+            <div id="daftar-review"></div>
+
+            <form id="form-review" class="mt-4 space-y-4 rounded-2xl bg-langit p-5" novalidate>
+              <h4 class="font-semibold">Tulis review kamu</h4>
+              <div>
+                <label for="review-rating" class="label-form">Rating</label>
+                <select id="review-rating" class="kolom">
+                  <option value="5">5 - Sangat bagus</option>
+                  <option value="4">4 - Bagus</option>
+                  <option value="3">3 - Cukup</option>
+                  <option value="2">2 - Kurang</option>
+                  <option value="1">1 - Buruk</option>
+                </select>
+              </div>
+              <div>
+                <label for="review-komentar" class="label-form">Komentar</label>
+                <textarea id="review-komentar" rows="3" class="kolom h-auto py-3 resize-none" placeholder="Ceritakan pengalaman belajarmu"></textarea>
+                <p id="err-review-komentar" class="error"></p>
+              </div>
+              <button type="submit" class="tombol-utama">Kirim Review</button>
+            </form>
+          </div>
+
+          <!-- Tab 2: Questions and responses (tersembunyi dulu) -->
+          <div id="panel-tanya" class="hidden">
+            <div class="mt-7 flex items-center gap-3 border-b-2 border-biru-muda pb-3">
+              <h3 class="font-judul font-semibold text-xl">Questions and responses</h3>
+              <span id="badge-tanya" class="inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-biru-muda px-2 text-sm font-semibold text-biru-tua">0</span>
+            </div>
+            <div id="daftar-tanya"></div>
+
+            <form id="form-tanya" class="mt-4 space-y-4 rounded-2xl bg-langit p-5" novalidate>
+              <h4 class="font-semibold">Ajukan pertanyaan</h4>
+              <div>
+                <label for="tanya-teks" class="label-form">Pertanyaan</label>
+                <textarea id="tanya-teks" rows="3" class="kolom h-auto py-3 resize-none" placeholder="Tulis pertanyaanmu untuk pengajar"></textarea>
+                <p id="err-tanya-teks" class="error"></p>
+              </div>
+              <button type="submit" class="tombol-utama">Kirim Pertanyaan</button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-garis bg-langit">
+    <div class="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-redup">
+      &copy; 2026 SkillShare Campus &middot; Proyek UTS Pemrograman Web
+    </div>
+  </footer>
+
+  <!-- Pesan kecil (toast) -->
+  <div id="toast" role="status" aria-live="polite"
+       class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] rounded-full bg-navy px-6 py-3 text-sm font-medium text-white shadow-lg opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+  <!-- ===== JavaScript khusus halaman ini ===== -->
+  <script>
+    // Nomor kelas diambil dari alamat, misalnya detail.html?id=2
+    const idKelas = Number(new URLSearchParams(window.location.search).get('id'));
+
+    // Tampilkan info kelas, kuota, dan tombol daftar
+    function tampilkanDetail() {
+      const kelas = ambilKelasById(idKelas);
+      const user = ambilUser();
+      const sisa = sisaKuota(kelas);
+      const terdaftar = hitungPendaftar(kelas.id);
+      let persen = 0;
+      if (kelas.kuota > 0) persen = Math.round((terdaftar / kelas.kuota) * 100);
+
+      // Info kelas
+      el('detail-kategori').textContent = kelas.kategori;
+      el('detail-nama').textContent = kelas.nama;
+      el('detail-pengajar').textContent = kelas.pengajar;
+      el('detail-jadwal').textContent = kelas.jadwal;
+      el('detail-lokasi').textContent = kelas.lokasi;
+      el('detail-deskripsi').textContent = kelas.deskripsi;
+      el('detail-ikon').innerHTML = ikonKategori(kelas.kategori, 36);
+      document.title = kelas.nama + ' | SkillShare Campus';
+
+      // Kuota
+      el('detail-sisa').textContent = sisa;
+      el('detail-kuota').textContent = kelas.kuota;
+      el('detail-bar').style.width = persen + '%';
+      el('detail-info').textContent = terdaftar + ' dari ' + kelas.kuota + ' kursi sudah terisi';
+
+      // Tombol daftar: tiga kemungkinan keadaan
+      const tombol = el('btn-daftar-kelas');
+      if (sudahDaftar(kelas.id, user)) {
+        tombol.disabled = true;
+        tombol.textContent = 'Kamu sudah terdaftar';
+      } else if (sisa === 0) {
+        tombol.disabled = true;
+        tombol.textContent = 'Kuota penuh';
+      } else {
+        tombol.disabled = false;
+        tombol.textContent = 'Daftar Kelas';
+      }
+
+      // Daftar peserta
+      const peserta = ambilPendaftaranKelas(kelas.id);
+      let htmlPeserta = '';
+      if (peserta.length === 0) htmlPeserta = '<li>Belum ada peserta.</li>';
+      for (let i = 0; i < peserta.length; i++) {
+        htmlPeserta += '<li>' + esc(peserta[i].username) + '</li>';
+      }
+      el('detail-peserta').innerHTML = htmlPeserta;
+    }
+
+    // Lingkaran berisi inisial nama
+    function avatar(nama) {
+      return '<span aria-hidden="true" class="flex size-11 shrink-0 items-center justify-center rounded-full bg-biru-muda text-sm font-semibold text-biru-tua">' +
+        esc(inisial(nama)) + '</span>';
+    }
+
+    // Tampilkan daftar review dan rata-rata rating
+    function tampilkanReview() {
+      const daftar = ambilReview(idKelas);
+      const rata = rataRataRating(idKelas);
+      let html = '';
+
+      if (daftar.length === 0) html = '<p class="py-6 text-sm text-redup">Belum ada review. Jadilah yang pertama!</p>';
+      for (let i = 0; i < daftar.length; i++) {
+        const r = daftar[i];
+        html += '' +
+          '<article class="flex gap-4 border-b border-biru-muda py-5 last:border-b-0">' +
+            avatar(r.username) +
+            '<div>' +
+              '<p class="text-sm font-semibold">' + esc(r.username) + '</p>' +
+              '<div class="my-1">' + bintang(r.rating, 16) + '</div>' +
+              '<p class="text-sm leading-6 text-redup">' + esc(r.komentar) + '</p>' +
+              '<p class="mt-1 text-xs text-slate-500">' + formatTanggal(r.tanggal) + '</p>' +
+            '</div>' +
+          '</article>';
+      }
+
+      el('daftar-review').innerHTML = html;
+      el('rata-rating').textContent = (rata === 0 ? '-' : rata);
+      el('bintang-rata').innerHTML = bintang(rata, 26);
+      el('jumlah-review').textContent = daftar.length;
+      el('badge-review').textContent = daftar.length;
+    }
+
+    // Tampilkan daftar pertanyaan
+    function tampilkanTanya() {
+      const daftar = ambilTanya(idKelas);
+      let html = '';
+
+      if (daftar.length === 0) html = '<p class="py-6 text-sm text-redup">Belum ada pertanyaan.</p>';
+      for (let i = 0; i < daftar.length; i++) {
+        const t = daftar[i];
+        html += '' +
+          '<article class="flex gap-4 border-b border-biru-muda py-5 last:border-b-0">' +
+            avatar(t.username) +
+            '<div>' +
+              '<p class="text-sm font-semibold">' + esc(t.username) + '</p>' +
+              '<p class="mt-1 text-sm leading-6 text-redup">' + esc(t.teks) + '</p>' +
+              '<p class="mt-1 text-xs text-slate-500">' + formatTanggal(t.tanggal) + '</p>' +
+            '</div>' +
+          '</article>';
+      }
+
+      el('daftar-tanya').innerHTML = html;
+      el('jumlah-tanya').textContent = daftar.length;
+      el('badge-tanya').textContent = daftar.length;
+    }
+
+    // Pindah tab: 'review' atau 'tanya'
+    function pilihTab(nama) {
+      const reviewAktif = (nama === 'review');
+      el('tab-review').setAttribute('aria-selected', String(reviewAktif));
+      el('tab-tanya').setAttribute('aria-selected', String(!reviewAktif));
+      el('panel-review').classList.toggle('hidden', !reviewAktif);
+      el('panel-tanya').classList.toggle('hidden', reviewAktif);
+    }
+
+    if (ambilKelasById(idKelas) === null) {
+      // Alamat salah / kelas tidak ada: kembali ke Daftar Kelas
+      pesanBerikutnya('Kelas tidak ditemukan.');
+      window.location.replace('kelas.html');
+    } else {
+      tampilkanDetail();
+      tampilkanReview();
+      tampilkanTanya();
+
+      // Tombol Daftar Kelas
+      el('btn-daftar-kelas').addEventListener('click', function () {
+        const hasil = daftarKelas(idKelas, ambilUser());
+        toast(hasil.pesan);
+        tampilkanDetail();
+      });
+
+      // Tombol tab
+      el('tab-review').addEventListener('click', function () { pilihTab('review'); });
+      el('tab-tanya').addEventListener('click', function () { pilihTab('tanya'); });
+
+      // Kirim review
+      el('form-review').addEventListener('submit', function (e) {
+        e.preventDefault();
+        bersihkanError(this);
+        const komentar = el('review-komentar').value.trim();
+        if (komentar.length < 5) {
+          setError('review-komentar', 'Komentar minimal 5 karakter.');
+          return;
+        }
+        tambahReview(idKelas, ambilUser(), el('review-rating').value, komentar);
+        this.reset();
+        tampilkanReview();
+        toast('Terima kasih, review kamu tersimpan.');
+      });
+
+      // Kirim pertanyaan
+      el('form-tanya').addEventListener('submit', function (e) {
+        e.preventDefault();
+        bersihkanError(this);
+        const teks = el('tanya-teks').value.trim();
+        if (teks.length < 5) {
+          setError('tanya-teks', 'Pertanyaan minimal 5 karakter.');
+          return;
+        }
+        tambahTanya(idKelas, ambilUser(), teks);
+        this.reset();
+        tampilkanTanya();
+        toast('Pertanyaan kamu terkirim.');
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Kelas | SkillShare Campus</title>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS (lewat CDN, tidak perlu instalasi) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.3/dist/index.global.js"></script>
+
+  <!-- CSS biasa milik kita -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Warna, font, dan komponen yang dipakai semua halaman.
+       BAGIAN INI SAMA DI SEMUA FILE HTML. Jangan diubah sendiri, tanya Anggota 1. -->
+  <style type="text/tailwindcss">
+    @theme {
+      --color-navy: #0B1B4D;
+      --color-biru: #2563EB;
+      --color-biru-tua: #1E3A8A;
+      --color-biru-muda: #DBEAFE;
+      --color-biru-tipis: #BFDBFE;
+      --color-langit: #EFF6FF;
+      --color-awan: #F4F8FF;
+      --color-garis: #C7D7F5;
+      --color-redup: #475A85;
+      --font-judul: "Playfair Display", serif;
+      --font-sans: "Poppins", system-ui, sans-serif;
+    }
+
+    @layer components {
+      .tombol-utama   { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full bg-biru text-white font-semibold cursor-pointer transition-colors hover:bg-biru-tua disabled:bg-biru-tipis disabled:text-biru-tua disabled:cursor-not-allowed; }
+      .tombol-tua     { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full bg-biru-tua text-white font-semibold cursor-pointer transition-colors hover:bg-navy; }
+      .tombol-putih   { @apply inline-flex items-center justify-center min-h-12 px-8 rounded-full bg-white text-navy font-semibold cursor-pointer transition-colors hover:bg-langit; }
+      .tombol-garis   { @apply inline-flex items-center justify-center min-h-12 px-7 rounded-full border-2 border-biru text-biru font-semibold cursor-pointer transition-colors hover:bg-langit; }
+      .tombol-garis-putih { @apply inline-flex items-center justify-center min-h-12 px-8 rounded-full border-2 border-white text-white font-semibold cursor-pointer transition-colors hover:bg-white/10; }
+      .kolom          { @apply w-full h-13 px-4 rounded-xl border-2 border-biru-tipis bg-white text-navy placeholder:text-slate-400 focus:outline-3 focus:outline-biru-tipis focus:border-biru; }
+      .kolom-pil      { @apply flex items-center gap-3 h-14 px-5 rounded-full border-2 border-biru-tipis bg-white text-biru-tua focus-within:border-biru focus-within:outline-3 focus-within:outline-biru-tipis; }
+      .kolom-pil input { @apply flex-1 min-w-0 bg-transparent text-navy outline-none placeholder:text-slate-400; }
+      .label-form     { @apply block mb-2 text-sm font-semibold text-navy; }
+      .error          { @apply mt-1.5 pl-1 text-sm font-medium text-red-700 empty:hidden; }
+      .kartu          { @apply bg-white border border-garis rounded-3xl; }
+      .chip           { @apply inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-biru-muda text-navy text-sm font-semibold; }
+      .nav-link       { @apply py-2 text-sm font-semibold text-navy border-b-4 border-transparent hover:text-biru; }
+      .nav-link.aktif { @apply text-biru border-biru; }
+    }
+  </style>
+
+  <!-- JavaScript bersama (data, login, fungsi bantu) -->
+  <script src="js/data.js"></script>
+  <!-- Kalau belum login, otomatis dikirim ke halaman Login -->
+  <script>wajibLogin();</script>
+</head>
+
+<body class="bg-white font-sans text-navy antialiased">
+
+  <!-- ===== NAVBAR (sama di semua halaman setelah login) ===== -->
+  <header class="sticky top-0 z-40 bg-white border-b border-garis">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex flex-wrap items-center justify-between gap-x-8 gap-y-2">
+      <div class="flex items-center gap-3">
+        <button id="btn-menu" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="menu-utama"
+                class="xl:hidden size-11 rounded-xl bg-langit text-biru-tua flex items-center justify-center cursor-pointer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a href="beranda.html" class="font-judul font-bold text-xl sm:text-2xl tracking-wider text-navy">SKILLSHARE CAMPUS</a>
+      </div>
+      <nav id="menu-utama" aria-label="Menu utama" class="hidden xl:flex basis-full xl:basis-auto flex-col xl:flex-row xl:items-center gap-x-7 gap-y-1">
+        <a class="nav-link" href="beranda.html">Beranda</a>
+        <a class="nav-link aktif" aria-current="page" href="kelas.html">Daftar Kelas</a>
+        <a class="nav-link" href="tambah.html">Tambah Kelas</a>
+        <a class="nav-link" href="tabel.html">Data Pendaftaran</a>
+        <a class="nav-link" href="statistik.html">Statistik</a>
+        <a class="nav-link" href="peta.html">Peta</a>
+        <span class="flex items-center gap-3 xl:ml-2 py-2 xl:py-0">
+          <span class="text-sm text-redup">Halo, <strong id="nama-user" class="text-navy"></strong></span>
+          <button id="btn-logout" type="button" class="tombol-garis min-h-10 px-5 text-sm">Keluar</button>
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== HALAMAN DAFTAR KELAS (Anggota 3) ===== -->
+    <section aria-labelledby="judul-kelas">
+      <div class="max-w-7xl mx-auto px-6 py-10 sm:py-14">
+
+        <div class="flex items-center gap-4">
+          <h1 id="judul-kelas" class="flex-1 rounded-full bg-navy px-8 py-4 font-judul font-semibold text-2xl text-white">Daftar Kelas</h1>
+          <a href="tambah.html" aria-label="Tambah kelas baru" class="size-14 shrink-0 rounded-full bg-biru text-white flex items-center justify-center transition-colors hover:bg-biru-tua">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_16rem]">
+          <div>
+            <label for="cari-kelas" class="sr-only">Cari kelas</label>
+            <input id="cari-kelas" type="search" placeholder="Cari nama kelas atau pengajar" class="kolom">
+          </div>
+          <div>
+            <label for="filter-kategori" class="sr-only">Filter kategori</label>
+            <select id="filter-kategori" class="kolom">
+              <option value="">Semua kategori</option>
+              <option value="Musik">Musik</option>
+              <option value="Komputer">Komputer</option>
+              <option value="Komunikasi">Komunikasi</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Kartu kelas diisi oleh JavaScript di bawah -->
+        <div id="grid-kelas" class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+        <p id="kelas-kosong" class="hidden mt-6 rounded-2xl bg-langit border border-garis p-8 text-center text-redup">Belum ada kelas yang cocok. Coba kata kunci atau kategori lain.</p>
+
+        <section aria-labelledby="judul-kuota" class="mt-14 rounded-[2rem] border border-garis bg-langit p-6 sm:p-10">
+          <div class="flex items-center justify-center gap-3">
+            <span class="size-14 rounded-full bg-biru-muda text-biru-tua flex items-center justify-center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/><path d="M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z"/><path d="M5 18v2"/><path d="M19 18v2"/></svg></span>
+            <h2 id="judul-kuota" class="rounded-full bg-navy px-6 sm:px-8 py-3 font-judul font-medium text-lg sm:text-xl tracking-widest text-white">KUOTA KURSI TERSISA</h2>
+          </div>
+          <!-- 3 kolom: Kelas Musik, Kelas Komputer, Kelas Komunikasi -->
+          <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <section class="kartu p-5">
+            <h3 class="flex items-center gap-3 font-judul font-semibold text-lg">
+              <span class="flex size-10 items-center justify-center rounded-full bg-biru-muda text-biru-tua"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
+              Kelas Musik
+            </h3>
+            <ol id="panel-musik" class="mt-4 space-y-2"></ol>
+          </section>
+          <section class="kartu p-5">
+            <h3 class="flex items-center gap-3 font-judul font-semibold text-lg">
+              <span class="flex size-10 items-center justify-center rounded-full bg-biru-muda text-biru-tua"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
+              Kelas Komputer
+            </h3>
+            <ol id="panel-komputer" class="mt-4 space-y-2"></ol>
+          </section>
+          <section class="kartu p-5">
+            <h3 class="flex items-center gap-3 font-judul font-semibold text-lg">
+              <span class="flex size-10 items-center justify-center rounded-full bg-biru-muda text-biru-tua"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg></span>
+              Kelas Komunikasi
+            </h3>
+            <ol id="panel-komunikasi" class="mt-4 space-y-2"></ol>
+          </section>
+          </div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-garis bg-langit">
+    <div class="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-redup">
+      &copy; 2026 SkillShare Campus &middot; Proyek UTS Pemrograman Web
+    </div>
+  </footer>
+
+  <!-- Pesan kecil (toast) -->
+  <div id="toast" role="status" aria-live="polite"
+       class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 max-w-[90vw] rounded-full bg-navy px-6 py-3 text-sm font-medium text-white shadow-lg opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+  <!-- ===== JavaScript khusus halaman ini ===== -->
+  <script>
+    // HTML kartu untuk satu kelas
+    function kartuKelas(k) {
+      const sisa = sisaKuota(k);
+      let infoKuota = 'Sisa ' + sisa + ' dari ' + k.kuota + ' kursi';
+      let warna = 'text-biru-tua';
+      if (sisa === 0) {
+        infoKuota = 'Kuota penuh';
+        warna = 'text-red-700';
+      }
+      return '' +
+        '<article class="kartu flex flex-col p-4">' +
+          '<span class="chip w-full">' + esc(k.kategori) + '</span>' +
+          '<div class="mt-3 flex h-36 items-center justify-center rounded-2xl bg-langit text-biru-tua">' + ikonKategori(k.kategori, 72) + '</div>' +
+          '<h3 class="mt-4 font-judul font-semibold text-xl text-navy">' + esc(k.nama) + '</h3>' +
+          '<p class="mt-1 text-sm text-redup">' + esc(k.pengajar) + '</p>' +
+          '<p class="text-sm text-redup">' + esc(k.jadwal) + '</p>' +
+          '<p class="mt-2 text-sm font-semibold ' + warna + '">' + infoKuota + '</p>' +
+          '<a href="detail.html?id=' + k.id + '" class="tombol-tua mt-4 w-full">Detail</a>' +
+        '</article>';
+    }
+
+    // Tampilkan kartu sesuai kata pencarian dan kategori yang dipilih
+    function tampilkanKelas() {
+      const kata = el('cari-kelas').value.trim().toLowerCase();
+      const kategori = el('filter-kategori').value;
+      const semua = ambilSemuaKelas();
+      let html = '';
+      let jumlah = 0;
+
+      for (let i = 0; i < semua.length; i++) {
+        const k = semua[i];
+        const cocokKategori = (kategori === '' || k.kategori === kategori);
+        const cocokKata = k.nama.toLowerCase().indexOf(kata) !== -1 || k.pengajar.toLowerCase().indexOf(kata) !== -1;
+        if (cocokKategori && cocokKata) {
+          html += kartuKelas(k);
+          jumlah++;
+        }
+      }
+
+      el('grid-kelas').innerHTML = html;
+      el('kelas-kosong').classList.toggle('hidden', jumlah > 0);
+    }
+
+    // Isi satu kolom "Kuota Kursi Tersisa" (kategori = nama kategori, idDaftar = id <ol> di HTML)
+    function isiPanel(kategori, idDaftar) {
+      const semua = ambilSemuaKelas();
+      let html = '';
+      let nomor = 0;
+
+      for (let i = 0; i < semua.length; i++) {
+        const k = semua[i];
+        if (k.kategori === kategori) {
+          nomor++;
+          html += '' +
+            '<li class="flex items-center gap-3">' +
+              '<span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-biru-tua text-sm font-semibold text-white">' + nomor + '</span>' +
+              '<span class="min-w-0 flex-1 rounded-full border border-garis bg-langit px-4 py-1.5 text-sm">' +
+                '<span class="block truncate">' + esc(k.nama) + '</span>' +
+                '<span class="block text-xs text-redup">Sisa ' + sisaKuota(k) + ' kursi</span>' +
+              '</span>' +
+            '</li>';
+        }
+      }
+
+      if (html === '') html = '<li class="text-sm text-redup">Belum ada kelas di kategori ini.</li>';
+      el(idDaftar).innerHTML = html;
+    }
+
+    // Kalau dibuka dari Beranda (kelas.html?kategori=Musik), pilih kategori itu di filter
+    const kategoriDariAlamat = new URLSearchParams(window.location.search).get('kategori');
+    const pilihanFilter = el('filter-kategori').options;
+    for (let i = 0; i < pilihanFilter.length; i++) {
+      if (pilihanFilter[i].value === kategoriDariAlamat) {
+        el('filter-kategori').value = kategoriDariAlamat;
+      }
+    }
+
+    el('cari-kelas').addEventListener('input', tampilkanKelas);
+    el('filter-kategori').addEventListener('change', tampilkanKelas);
+
+    tampilkanKelas();
+    isiPanel('Musik', 'panel-musik');
+    isiPanel('Komputer', 'panel-komputer');
+    isiPanel('Komunikasi', 'panel-komunikasi');
+  </script>
+</body>
+</html>
